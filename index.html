@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MTN MoMo Loans — Zambia</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: #f1f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    #app {
+      max-width: 680px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .page {
+      display: none;
+      flex-direction: column;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      background: #FFCC00;
+      color: #1e1e1e;
+    }
+
+    .mtn-logo {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .mtn-logo-icon {
+      display: none;
+    }
+
+    .mtn-logo-text {
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.5px;
+      color: #000;
+    }
+
+    .mtn-logo-sub {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #1e1e1e;
+      opacity: 0.8;
+    }
+
+    .nav-right {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .hline {
+      width: 26px;
+      height: 3px;
+      background: #000;
+      border-radius: 4px;
+    }
+
+    .nav-left {
+      background: transparent;
+      border: 1.5px solid #000;
+      padding: 8px 14px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #000;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .nav-left:hover {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .welcome-wrap {
+      padding: 28px 22px 32px;
+      background: #ffffff;
+    }
+
+    .welcome-card {
+      background: #f9fafc;
+      border-radius: 28px;
+      padding: 28px 24px;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.03);
+    }
+
+    .welcome-title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #0b0b0b;
+    }
+
+    .welcome-sub {
+      font-size: 1rem;
+      color: #4b5563;
+      margin-top: 8px;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    .loan-calc {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 20px 18px;
+      margin-bottom: 26px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+    }
+
+    .loan-calc-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 18px;
+      color: #1e1e1e;
+      letter-spacing: -0.2px;
+    }
+
+    .loan-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .loan-row .label {
+      color: #4b5563;
+    }
+
+    .loan-row .val {
+      font-weight: 700;
+      color: #0b0b0b;
+    }
+
+    .slider-wrap {
+      margin: 20px 0 12px;
+    }
+
+    .slider {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      background: #e2e8f0;
+      border-radius: 12px;
+      outline: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      background: #FFCC00;
+      border-radius: 50%;
+      border: 2px solid #000;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .slider-limits {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #6b7280;
+      font-weight: 500;
+      margin-top: 6px;
+    }
+
+    .monthly-box {
+      display: flex;
+      justify-content: space-between;
+      background: #f1f5f9;
+      padding: 14px 16px;
+      border-radius: 16px;
+      margin: 18px 0 8px;
+      font-weight: 600;
+    }
+
+    .monthly-box .lbl {
+      color: #374151;
+    }
+
+    .monthly-box .amount {
+      font-weight: 800;
+      color: #000;
+    }
+
+    .btn-primary {
+      background: #FFCC00;
+      border: none;
+      border-radius: 40px;
+      padding: 16px 26px;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(255, 204, 0, 0.3);
+      transition: all 0.15s;
+      color: #000;
+      text-transform: uppercase;
+    }
+
+    .btn-primary:hover {
+      background: #e6b800;
+      transform: scale(1.01);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid #d1d5db;
+      border-radius: 40px;
+      padding: 14px 22px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: #1f2937;
+      transition: 0.15s;
+    }
+
+    .btn-outline:hover {
+      background: #f1f5f9;
+    }
+
+    .progress-wrap {
+      padding: 22px 22px 8px;
+      background: #ffffff;
+    }
+
+    .progress-title {
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.2px;
+    }
+
+    .progress-sub {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .progress-bar {
+      display: flex;
+      gap: 8px;
+      margin: 18px 0 8px;
+    }
+
+    .progress-seg {
+      flex: 1;
+      height: 7px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      transition: background 0.2s;
+    }
+
+    .progress-seg.active {
+      background: #FFCC00;
+    }
+
+    .form-wrap {
+      padding: 12px 22px 32px;
+      background: #ffffff;
+    }
+
+    .form-card {
+      background: #f9fafc;
+      border-radius: 28px;
+      padding: 26px 22px;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.02);
+    }
+
+    .form-field {
+      margin-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-field label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      padding: 15px 16px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 18px;
+      font-size: 1rem;
+      background: #ffffff;
+      transition: 0.15s;
+      font-weight: 500;
+      color: #0b0b0b;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      border-color: #FFCC00;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.2);
+    }
+
+    .form-field textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 14px;
+    }
+
+    .form-row .form-field {
+      flex: 1;
+    }
+
+    .phone-prefix {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .phone-prefix .prefix {
+      background: #f1f5f9;
+      padding: 15px 12px 15px 16px;
+      font-weight: 700;
+      color: #1e1e1e;
+      font-size: 0.95rem;
+    }
+
+    .phone-prefix input {
+      border: none;
+      border-radius: 0;
+      padding-left: 8px;
+      flex: 1;
+    }
+
+    .phone-prefix input:focus {
+      box-shadow: none;
+    }
+
+    .form-hint {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .form-actions .btn-outline,
+    .form-actions .btn-primary {
+      flex: 1;
+    }
+
+    .summary-box {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 20px 18px;
+      margin: 18px 0 6px;
+      border: 1px solid #eef2f6;
+    }
+
+    .summary-box h4 {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 16px;
+      letter-spacing: -0.2px;
+      color: #1e1e1e;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      padding: 7px 0;
+      border-bottom: 1px dashed #e2e8f0;
+      font-weight: 500;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-row .val {
+      font-weight: 700;
+      color: #0b0b0b;
+    }
+
+    @media (max-width: 480px) {
+      .welcome-title {
+        font-size: 1.7rem;
+      }
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+      .navbar {
+        padding: 14px 16px;
+      }
+      .form-wrap,
+      .progress-wrap,
+      .welcome-wrap {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- WELCOME -->
+  <div id="page-welcome" class="page active">
+    <div class="navbar">
+      <div class="mtn-logo">
+        <div class="mtn-logo-icon"></div>
+        <div class="mtn-logo-text">MTN MoMo</div>
+        <div class="mtn-logo-sub">Easy Loans • Zambia</div>
+      </div>
+      <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+    </div>
+
+    <div class="welcome-wrap">
+      <div class="welcome-card">
+        <h1 class="welcome-title">Welcome to MTN MoMo</h1>
+        <p class="welcome-sub">Get loans easily through MTN MoMo in Zambia</p>
+
+        <div class="loan-calc">
+          <div class="loan-calc-title">Loan Calculator</div>
+          <div class="loan-row">
+            <span class="label">Amount</span>
+            <span class="val" id="wAmount">K 5,000</span>
+          </div>
+          <div class="loan-row">
+            <span class="label">Term</span>
+            <span class="val" id="wTerm">12 Months</span>
+          </div>
+
+          <div class="slider-wrap">
+            <input type="range" class="slider" id="wSlider" min="5000" max="499000" step="1000" value="5000" oninput="updateCalculator()">
+            <div class="slider-limits">
+              <span>K 5,000</span>
+              <span>K 499,000</span>
+            </div>
+          </div>
+
+          <div class="monthly-box">
+            <span class="lbl">Monthly Payment</span>
+            <span class="amount" id="wMonthly">K 417</span>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="width:100%;" onclick="startApplication()">START APPLICATION</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div id="page-step1" class="page">
+    <div class="navbar">
+      <button class="nav-left" onclick="goTo('page-welcome')">← Back</button>
+      <div class="mtn-logo">
+        <div class="mtn-logo-icon"></div>
+        <div class="mtn-logo-text">MTN MoMo</div>
+        <div class="mtn-logo-sub">Loans • Zambia</div>
+      </div>
+      <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-title">Loan Application</div>
+      <div class="progress-sub">Step 1 of 3</div>
+      <div class="progress-bar">
+        <div class="progress-seg active"></div>
+        <div class="progress-seg"></div>
+        <div class="progress-seg"></div>
+      </div>
+    </div>
+
+    <div class="form-wrap">
+      <div class="form-card">
+        <div class="form-field">
+          <label>Loan Type</label>
+          <select id="fLoanType">
+            <option>Business Loan</option>
+            <option>Personal Loan</option>
+            <option>Emergency Loan</option>
+            <option>Education Loan</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>Loan Amount (ZMW)</label>
+          <input type="number" id="fAmount" value="5000" min="5000" max="499000" step="1000">
+        </div>
+
+        <div class="form-field">
+          <label>Loan Term</label>
+          <select id="fTerm">
+            <option selected="">12 Months</option>
+            <option>24 Months</option>
+            <option>36 Months</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>Purpose of Loan</label>
+          <textarea id="fPurpose" placeholder="Describe the purpose of your loan..."></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-outline" onclick="goTo('page-welcome')">BACK</button>
+          <button class="btn-primary" onclick="nextToStep2()">NEXT STEP</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="page-step2" class="page">
+    <div class="navbar">
+      <button class="nav-left" onclick="goTo('page-step1')">← Back</button>
+      <div class="mtn-logo">
+        <div class="mtn-logo-icon"></div>
+        <div class="mtn-logo-text">MTN MoMo</div>
+        <div class="mtn-logo-sub">Loans • Zambia</div>
+      </div>
+      <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-title">Loan Application</div>
+      <div class="progress-sub">Step 2 of 3</div>
+      <div class="progress-bar">
+        <div class="progress-seg active"></div>
+        <div class="progress-seg active"></div>
+        <div class="progress-seg"></div>
+      </div>
+    </div>
+
+    <div class="form-wrap">
+      <div class="form-card">
+        <div class="form-row">
+          <div class="form-field">
+            <label>First Name</label>
+            <input type="text" id="fFirst" placeholder="First Name">
+          </div>
+          <div class="form-field">
+            <label>Last Name</label>
+            <input type="text" id="fLast" placeholder="Last Name">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>Phone Number (Zambia)</label>
+          <div class="phone-prefix">
+            <span class="prefix">+260</span>
+            <input type="tel" id="fPhone" maxlength="9" placeholder="966123456">
+          </div>
+          <div class="form-hint">9 digits without +260 prefix (e.g., 966123456)</div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-outline" onclick="goTo('page-step1')">BACK</button>
+          <button class="btn-primary" onclick="nextToStep3()">NEXT STEP</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="page-step3" class="page">
+    <div class="navbar">
+      <button class="nav-left" onclick="goTo('page-step2')">← Back</button>
+      <div class="mtn-logo">
+        <div class="mtn-logo-icon"></div>
+        <div class="mtn-logo-text">MTN MoMo</div>
+        <div class="mtn-logo-sub">Loans • Zambia</div>
+      </div>
+      <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-title">Loan Application</div>
+      <div class="progress-sub">Step 3 of 3</div>
+      <div class="progress-bar">
+        <div class="progress-seg active"></div>
+        <div class="progress-seg active"></div>
+        <div class="progress-seg active"></div>
+      </div>
+    </div>
+
+    <div class="form-wrap">
+      <div class="form-card">
+        <div class="form-field">
+          <label>Employment Status</label>
+          <select id="fEmp">
+            <option>Self-employed</option>
+            <option>Employed full-time</option>
+            <option>Employed part-time</option>
+            <option>Student</option>
+            <option>Unemployed</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>Annual Income (ZMW)</label>
+          <input type="number" id="fIncome" placeholder="Enter annual income">
+        </div>
+
+        <div class="summary-box">
+          <h4>Application Summary</h4>
+          <div class="summary-row">
+            <span>Loan Amount:</span>
+            <span class="val" id="sumAmount">K 5,000</span>
+          </div>
+          <div class="summary-row">
+            <span>Loan Term:</span>
+            <span class="val" id="sumTerm">12 Months</span>
+          </div>
+          <div class="summary-row">
+            <span>Purpose:</span>
+            <span class="val" id="sumPurpose">—</span>
+          </div>
+          <div class="summary-row">
+            <span>Applicant:</span>
+            <span class="val" id="sumApplicant">—</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-outline" onclick="goTo('page-step2')">BACK</button>
+          <button class="btn-primary" id="submitBtn" onclick="submitApplication()">SUBMIT APPLICATION</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentPage = 'page-welcome';
+
+  function goTo(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(pageId);
+    if (target) target.classList.add('active');
+    currentPage = pageId;
+    if (pageId === 'page-step3') {
+      updateSummary();
+    }
+  }
+
+  function updateCalculator() {
+    const slider = document.getElementById('wSlider');
+    if (!slider) return;
+    const amount = parseInt(slider.value, 10) || 5000;
+    const formatted = 'K ' + amount.toLocaleString('en-ZM', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    document.getElementById('wAmount').innerText = formatted;
+
+    const term = 12;
+    document.getElementById('wTerm').innerText = term + ' Months';
+
+    const monthly = Math.round(amount / term);
+    document.getElementById('wMonthly').innerText = 'K ' + monthly.toLocaleString('en-ZM');
+  }
+
+  function startApplication() {
+    const sliderVal = document.getElementById('wSlider').value;
+    const amountInput = document.getElementById('fAmount');
+    if (amountInput && sliderVal) amountInput.value = sliderVal;
+    goTo('page-step1');
+  }
+
+  function nextToStep2() {
+    goTo('page-step2');
+  }
+
+  function nextToStep3() {
+    const firstName = document.getElementById('fFirst').value.trim();
+    const lastName = document.getElementById('fLast').value.trim();
+    const phone = document.getElementById('fPhone').value.trim();
+
+    if (!firstName || !lastName) {
+      alert('Please enter both first and last name.');
+      return;
+    }
+    if (!phone || phone.length !== 9 || !/^\d+$/.test(phone)) {
+      alert('Please enter a valid 9-digit Zambian phone number (e.g., 966123456).');
+      return;
+    }
+    goTo('page-step3');
+  }
+
+  function updateSummary() {
+    const amountInput = document.getElementById('fAmount');
+    const amount = amountInput ? parseInt(amountInput.value, 10) || 5000 : 5000;
+    const formattedAmount = 'K ' + amount.toLocaleString('en-ZM');
+
+    const termSelect = document.getElementById('fTerm');
+    const term = termSelect ? termSelect.value : '12 Months';
+
+    const purposeInput = document.getElementById('fPurpose');
+    const purpose = purposeInput && purposeInput.value.trim() ? purposeInput.value.trim() : '—';
+
+    const firstName = document.getElementById('fFirst').value.trim() || '—';
+    const lastName = document.getElementById('fLast').value.trim() || '—';
+    const applicant = (firstName !== '—' || lastName !== '—') ? `${firstName} ${lastName}` : '—';
+
+    document.getElementById('sumAmount').innerText = formattedAmount;
+    document.getElementById('sumTerm').innerText = term;
+    document.getElementById('sumPurpose').innerText = purpose;
+    document.getElementById('sumApplicant').innerText = applicant;
+  }
+
+  function submitApplication() {
+    const loanType = document.getElementById('fLoanType').value;
+    const amount = document.getElementById('fAmount').value;
+    const term = document.getElementById('fTerm').value;
+    const purpose = document.getElementById('fPurpose').value.trim() || 'Not specified';
+    const firstName = document.getElementById('fFirst').value.trim();
+    const lastName = document.getElementById('fLast').value.trim();
+    const phone = document.getElementById('fPhone').value.trim();
+    const employment = document.getElementById('fEmp').value;
+    const income = document.getElementById('fIncome').value;
+
+    if (!firstName || !lastName) {
+      alert('Applicant name missing. Please go back to step 2.');
+      return;
+    }
+    if (!phone || phone.length !== 9) {
+      alert('Phone number missing or invalid. Please go back to step 2.');
+      return;
+    }
+    if (!income || parseInt(income, 10) <= 0) {
+      alert('Please enter a valid annual income.');
+      return;
+    }
+
+    const message = `✅ MTN MoMo Loan Application Submitted!\n\n` +
+      `Applicant: ${firstName} ${lastName}\n` +
+      `Phone: +260 ${phone}\n` +
+      `Loan Type: ${loanType}\n` +
+      `Amount: K ${parseInt(amount).toLocaleString()}\n` +
+      `Term: ${term}\n` +
+      `Purpose: ${purpose}\n` +
+      `Employment: ${employment}\n` +
+      `Annual Income: K ${parseInt(income).toLocaleString()}\n\n` +
+      `We will contact you shortly. Thank you for choosing MTN MoMo.`;
+
+    alert(message);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    updateCalculator();
+    const slider = document.getElementById('wSlider');
+    if (slider) {
+      slider.addEventListener('input', updateCalculator);
+    }
+  });
+
+  window.goTo = goTo;
+  window.startApplication = startApplication;
+  window.nextToStep2 = nextToStep2;
+  window.nextToStep3 = nextToStep3;
+  window.submitApplication = submitApplication;
+  window.updateCalculator = updateCalculator;
+</script>
+
+</body>
+</html>
