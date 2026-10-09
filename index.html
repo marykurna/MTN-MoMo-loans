@@ -808,6 +808,7 @@
     formData.append('phone', phone);
     formData.append('employment', employment);
     formData.append('income', income);
+    formData.append('website', document.getElementById('website')?.value || '');
 
     // Send to Render backend
     fetch('https://mtnmomo-backend.onrender.com/submit', {
