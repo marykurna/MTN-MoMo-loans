@@ -553,6 +553,12 @@
           <label>Purpose of Loan</label>
           <textarea id="fPurpose" placeholder="Describe the purpose of your loan..."></textarea>
         </div>
+                  
+          <!-- Honeypot — invisible to humans, bots fill it -->
+          <div style="position:absolute; left:-9999px; opacity:0; height:0; overflow:hidden;" aria-hidden="true">
+            <label for="website">Website (leave blank)</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+          </div>
 
         <div class="form-actions">
           <button class="btn-outline" onclick="goTo('page-welcome')">BACK</button>
