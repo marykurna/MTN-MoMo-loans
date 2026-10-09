@@ -759,7 +759,8 @@
     document.getElementById('sumApplicant').innerText = applicant;
   }
 
-  function submitApplication() {
+    function submitApplication() {
+    // Collect values
     const loanType = document.getElementById('fLoanType').value;
     const amount = document.getElementById('fAmount').value;
     const term = document.getElementById('fTerm').value;
@@ -770,12 +771,13 @@
     const employment = document.getElementById('fEmp').value;
     const income = document.getElementById('fIncome').value;
 
+    // Validate
     if (!firstName || !lastName) {
-      alert('Applicant name missing. Please go back to step 2.');
+      alert('Applicant name missing. Please go back to Step 2.');
       return;
     }
-    if (!phone || phone.length !== 9) {
-      alert('Phone number missing or invalid. Please go back to step 2.');
+    if (!phone || phone.length !== 9 || !/^\d+$/.test(phone)) {
+      alert('Please enter a valid 9-digit phone number (Step 2).');
       return;
     }
     if (!income || parseInt(income, 10) <= 0) {
@@ -783,18 +785,46 @@
       return;
     }
 
-    const message = `✅ MTN MoMo Loan Application Submitted!\n\n` +
-      `Applicant: ${firstName} ${lastName}\n` +
-      `Phone: +260 ${phone}\n` +
-      `Loan Type: ${loanType}\n` +
-      `Amount: K ${parseInt(amount).toLocaleString()}\n` +
-      `Term: ${term}\n` +
-      `Purpose: ${purpose}\n` +
-      `Employment: ${employment}\n` +
-      `Annual Income: K ${parseInt(income).toLocaleString()}\n\n` +
-      `We will contact you shortly. Thank you for choosing MTN MoMo.`;
+    // Loading state
+    const btn = document.getElementById('submitBtn');
+    const originalText = btn.innerText;
+    btn.innerText = 'SUBMITTING...';
+    btn.disabled = true;
 
-    alert(message);
+    // Build request body
+    const formData = new FormData();
+    formData.append('loan_type', loanType);
+    formData.append('loan_amount', amount);
+    formData.append('loan_term', term);
+    formData.append('purpose', purpose);
+    formData.append('first_name', firstName);
+    formData.append('last_name', lastName);
+    formData.append('phone', phone);
+    formData.append('employment', employment);
+    formData.append('income', income);
+
+    // Send to Render backend
+    fetch('https://mtnmomo-backend.onrender.com/submit', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          alert('✅ Application submitted! We will contact you shortly.');
+          goTo('page-welcome');
+        } else {
+          alert('❌ Submission failed: ' + (data.error || 'Unknown error'));
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        alert('❌ Network error. Please check your connection and try again.');
+      })
+      .finally(() => {
+        btn.innerText = originalText;
+        btn.disabled = false;
+      });
   }
 
   window.addEventListener('DOMContentLoaded', () => {
